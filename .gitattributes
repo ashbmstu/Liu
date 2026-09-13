@@ -1,0 +1,6 @@
+# Text is stored with LF endings and checked out with whatever the platform
+# prefers. Batch files are the exception: cmd.exe can miss goto labels in a
+# file with bare LF endings, so build.bat is always checked out with CRLF.
+* text=auto
+*.bat text eol=crlf
+*.png binary

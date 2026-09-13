@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # analysis.py and models.py import nothing from Qt, which is the whole reason
+  # the mathematics can be tested on a runner with no display. Installing the
+  # full requirements file rather than just the test dependencies is deliberate:
+  # it also checks that the file a newcomer is told to install still resolves.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the test suite
+        run: pytest tests
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ruff
+        run: pip install ruff==0.7.4
+
+      - name: Lint
+        run: ruff check .
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check relative links in Markdown resolve
+        run: |
+          python3 - <<'EOF'
+          import os, re, subprocess, sys
+
+          MD = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
+          # GitHub renders raw HTML in Markdown, so <img src> and <a href> are
+          # just as user-visible as a Markdown link - and the pattern above is
+          # blind to them. Attribute values may be single- or double-quoted, and
+          # the tag may wrap across lines, which [^>] already spans.
+          HTML = re.compile(
+              r'<(?:img|a|source|video|audio|embed)\b[^>]*?'
+              r'\b(?:src|href|poster)\s*=\s*("[^"]*"|\'[^\']*\')',
+              re.IGNORECASE)
+          SKIP = ('http://', 'https://', 'mailto:', 'data:', 'tel:', '//', '#')
+
+          def targets(body):
+              for m in MD.finditer(body):
+                  yield 'md', m.group(2)
+              for m in HTML.finditer(body):
+                  yield 'html', m.group(1)[1:-1]
+
+          files = subprocess.check_output(['git', 'ls-files', '*.md'], text=True).split()
+          bad, checked = [], 0
+          for f in files:
+              with open(f, encoding='utf-8') as fh:
+                  body = fh.read()
+              for kind, raw in targets(body):
+                  target = raw.split('#')[0].strip()
+                  if not target or target.startswith(SKIP):
+                      continue
+                  checked += 1
+                  path = os.path.normpath(os.path.join(os.path.dirname(f), target))
+                  if not os.path.exists(path):
+                      bad.append('%s -> %s (%s)' % (f, target, kind))
+          if bad:
+              print('Broken relative links:')
+              for b in bad:
+                  print('  ' + b)
+              sys.exit(1)
+          print('All %d relative targets in %d Markdown files resolve.' % (checked, len(files)))
+          EOF

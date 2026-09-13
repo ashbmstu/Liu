@@ -1,0 +1,65 @@
+Liu Threshold Analyzer
+Copyright (c) 2026 ASH and contributors
+
+The application code in src/ is MIT licensed, as per LICENSE. What follows
+covers the parts that came from somewhere else, including the libraries bundled
+into the distributed .exe. This file is not legal advice; consult the upstream
+licences for the authoritative terms.
+
+---
+
+The Gaussian beam diagram
+
+src/liu_analyzer/resources/laser_scheme.png, shown in the Instructions dialog
+and bundled into the executable, is adapted from the Wikimedia Commons file
+GaussianBeamWaist.svg. It is used under the Creative Commons
+Attribution-ShareAlike 3.0 Unported licence.
+
+    Rodolfo Hermans, after an original by Dr. Bob
+    https://commons.wikimedia.org/wiki/File:GaussianBeamWaist.svg
+    https://creativecommons.org/licenses/by-sa/3.0/
+
+Because that licence is share-alike, the adapted image is itself offered under
+CC BY-SA 3.0 rather than under the MIT terms covering the code. The same credit
+appears in the application's own About dialog, in every language, so that it
+travels with the executable.
+
+---
+
+Bundled libraries
+
+The distributed .exe is built with PyInstaller and contains these third-party
+runtimes. Installing from requirements.txt fetches the same versions.
+
+    PySide6              LGPL v3 (Qt for Python)
+                         https://wiki.qt.io/Qt_for_Python
+    Qt 6                 LGPL v3
+                         https://www.qt.io/licensing/
+    matplotlib           matplotlib licence, a BSD-style licence derived from
+                         the Python Software Foundation licence
+                         https://matplotlib.org/stable/users/project/license.html
+    NumPy                BSD 3-Clause
+                         https://numpy.org/doc/stable/license.html
+    PyInstaller          GPL v2 or later, with an exception permitting the
+                         bootloader to be distributed with non-GPL applications
+                         https://pyinstaller.org/en/stable/license.html
+
+PySide6 and Qt are used as unmodified shared libraries under the LGPL. The LGPL
+requires that a recipient be able to replace them with a modified version; the
+complete source of this application, its dependency versions and its build
+script are published in this repository, which is how that is satisfied here.
+
+Chinese text in the chart is drawn with a font already installed on the
+computer, such as Microsoft YaHei on Windows. No font is bundled.
+
+---
+
+The method
+
+The analysis implements the technique described in:
+
+    Liu, J. M. (1982). Simple technique for measurements of pulsed
+    Gaussian-beam spot sizes. Optics Letters, 7(5), 196.
+    https://doi.org/10.1364/OL.7.000196
+
+The paper describes a method and is not distributed here. See CITATION.cff.

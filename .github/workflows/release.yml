@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # The executable people download is built here, from the tagged commit, and
+  # never on a developer's machine. That makes the binary reproducible from the
+  # repository alone, and it keeps local user names and folder paths - which a
+  # PyInstaller build embeds in the bytecode it bundles - out of the release.
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # A tag that disagrees with the version in the About dialog, the Windows
+      # file properties or the changelog produces a release that contradicts
+      # itself. Refuse it before spending several minutes building.
+      - name: Check the tag matches every version string
+        shell: bash
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          fail=0
+          grep -q "__version__ = \"$v\"" src/liu_analyzer/__init__.py \
+            || { echo "src/liu_analyzer/__init__.py does not say $v"; fail=1; }
+          grep -q "^version = \"$v\"" pyproject.toml \
+            || { echo "pyproject.toml does not say $v"; fail=1; }
+          grep -q "'FileVersion', '$v.0'" packaging/version_info.txt \
+            || { echo "packaging/version_info.txt does not say $v.0"; fail=1; }
+          grep -qF "## [$v]" CHANGELOG.md \
+            || { echo "CHANGELOG.md has no section for $v"; fail=1; }
+          exit $fail
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run the tests
+        run: python -m pytest tests
+
+      - name: Build the executable
+        run: python -m PyInstaller --clean --noconfirm --distpath dist packaging/liu-analyzer.spec
+
+      # Written by Python rather than redirected from print(): on a Windows
+      # runner stdout is cp1252, and the changelog is not.
+      - name: Write the release notes from the changelog
+        shell: bash
+        run: |
+          python - "${GITHUB_REF_NAME#v}" <<'EOF'
+          import re, sys
+          version = sys.argv[1]
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          match = re.search(
+              r"^## \[" + re.escape(version) + r"\][^\n]*\n(.*?)(?=^## \[|^\[[^\]]+\]: |\Z)",
+              text, re.S | re.M)
+          notes = match.group(1).strip() if match else "See CHANGELOG.md."
+          with open("notes.md", "w", encoding="utf-8") as out:
+              out.write("Download **LiuAnalyzer.exe** below: one file, no installer, "
+                        "for Windows 10 (1809 or later) and Windows 11.\n\n")
+              out.write(notes + "\n")
+          EOF
+
+      - name: Publish the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/LiuAnalyzer.exe \
+            --title "Liu Threshold Analyzer ${GITHUB_REF_NAME#v}" \
+            --notes-file notes.md

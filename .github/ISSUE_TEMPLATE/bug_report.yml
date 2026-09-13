@@ -1,0 +1,72 @@
+name: Bug report
+description: Something the program does wrong
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the problem is a **number you think is wrong**, the measurements
+        matter more than anything else. Paste the pairs you typed in and the
+        result you got, and it can be reproduced exactly.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+
+  - type: textarea
+    id: data
+    attributes:
+      label: The measurements
+      description: One pair per line, pulse energy in mJ and diameter in µm. Skip if the problem is not about a result.
+      placeholder: |
+        0.05  12.4
+        0.10  22.1
+        0.10  21.0
+      render: text
+
+  - type: dropdown
+    id: how-run
+    attributes:
+      label: How are you running it?
+      options:
+        - The portable .exe
+        - From source
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown in the About dialog.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 23H2
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: |
+        The tail of `%LOCALAPPDATA%\LiuAnalyzer\liu.log`, if the program
+        misbehaved rather than simply calculating something you disagree with.
+      render: shell

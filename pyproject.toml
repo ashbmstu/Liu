@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "liu-analyzer"
+version = "1.0.0"
+description = "Liu's-method laser-ablation-threshold analyzer (Windows desktop app)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "ASH" }]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "PySide6>=6.7,<6.8",
+    "matplotlib>=3.9,<4",
+    "numpy>=2.0,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.7"]
+build = ["pyinstaller>=6.11"]
+
+[project.scripts]
+liu-analyzer = "liu_analyzer.app:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["liu_analyzer*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+# Qt's abstract model API dictates these signatures: rowCount and columnCount
+# are called by the view with a default-constructed QModelIndex, so the call in
+# the default argument is required rather than a mistake.
+"src/liu_analyzer/widgets/data_table.py" = ["B008"]
