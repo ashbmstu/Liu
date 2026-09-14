@@ -156,6 +156,7 @@ which is the one to put in a report.
 | `src/liu_analyzer/widgets/` | The window and its parts: chart, table, add-row, dialogs |
 | `tests/` | Unit tests for the analysis, persistence and translations |
 | `tools/screenshots.py` | Regenerates the images in `docs/img` from the running application |
+| `tools/make_icon.py` | Draws the application icon into `src/liu_analyzer/resources` |
 | `packaging/` | PyInstaller spec and the Windows version resource |
 | `build.bat` | The local build: venv, dependencies, tests, then `dist\LiuAnalyzer.exe` |
 | `.github/workflows/` | CI on every push, and the release build on every version tag |
@@ -203,7 +204,7 @@ changelog entry as the release notes.
 
 ## Project status
 
-Working and in use. Version 1.0.1 — see [CHANGELOG.md](CHANGELOG.md). It does
+Working and in use. Version 1.0.2 — see [CHANGELOG.md](CHANGELOG.md). It does
 one job and is not expected to grow much; bug reports and translation fixes
 are the most likely changes.
 

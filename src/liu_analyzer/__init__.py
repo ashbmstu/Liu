@@ -5,4 +5,4 @@ threshold fluence F_th and Gaussian-beam waist diameter d from a series of
 (pulse-energy, crater-diameter) measurements.
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"

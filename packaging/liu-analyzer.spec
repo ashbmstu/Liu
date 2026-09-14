@@ -12,13 +12,13 @@ block_cipher = None
 PROJECT_ROOT = Path(SPECPATH).parent.resolve()
 SRC = PROJECT_ROOT / "src"
 ENTRY = SRC / "liu_analyzer" / "__main__.py"
-ICON = PROJECT_ROOT / "packaging" / "icon.ico"
 VERSION = PROJECT_ROOT / "packaging" / "version_info.txt"
 
 RESOURCES = SRC / "liu_analyzer" / "resources"
+ICON = RESOURCES / "icon.ico"
 RESOURCE_DATAS = [
     (str(RESOURCES / name), "liu_analyzer/resources")
-    for name in ("laser_scheme.png",)
+    for name in ("laser_scheme.png", "icon.ico")
     if (RESOURCES / name).exists()
 ]
 
