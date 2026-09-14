@@ -9,6 +9,7 @@ authors:
 repository-code: https://github.com/ashbmstu/Liu
 license: MIT
 version: 1.0.0
+date-released: 2026-09-13
 abstract: >-
   A Windows desktop tool that extracts the laser ablation threshold fluence and
   the Gaussian beam waist diameter from a series of crater-diameter

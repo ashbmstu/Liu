@@ -110,6 +110,26 @@ def test_derive_seed_known_values():
     assert res.E_th == pytest.approx(0.05874, abs=1e-4)
 
 
+def test_threshold_uncertainty_matches_full_covariance():
+    """Check ΔF_th against an independent computation of the OLS covariance."""
+    import numpy as np
+
+    groups = group_rows(SEED)
+    fit = fit_liu(groups)
+    res = derive_results(fit)
+    x = np.array([math.log(g.E) for g in groups for _ in g.diameters])
+    y = np.array([d * d for g in groups for d in g.diameters])
+    design = np.column_stack([x, np.ones_like(x)])
+    coeffs, residuals, _, _ = np.linalg.lstsq(design, y, rcond=None)
+    sigma2 = residuals[0] / (len(x) - 2)
+    cov = sigma2 * np.linalg.inv(design.T @ design)
+    a, b = coeffs
+    grad = np.array([b / (a * a) - 1.0 / a, -1.0 / a])
+    expected = res.F_th * math.sqrt(grad @ cov @ grad)
+    assert fit.cov_slope_intercept == pytest.approx(cov[0, 1], rel=1e-9)
+    assert res.dF_th == pytest.approx(expected, rel=1e-9)
+
+
 def test_derive_results_invalid_when_slope_negative():
     from liu_analyzer.models import FitResult
     fit = FitResult(valid=True, slope=-1.0, intercept=10.0)

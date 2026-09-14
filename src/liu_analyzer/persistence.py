@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 from collections.abc import Iterable
 from dataclasses import asdict
@@ -78,10 +79,20 @@ def default_save_path(series_name: str = "") -> Path:
 
 
 def load_session(path: Path) -> tuple[list[Measurement], str]:
-    """Read a session JSON. Returns (measurements, series_name)."""
-    data = json.loads(path.read_text(encoding="utf-8"))
-    rows = [
-        Measurement(id=int(m["id"]), E=float(m["E"]), D=float(m["D"]))
-        for m in data.get("measurements", [])
-    ]
+    """Read a session JSON. Returns (measurements, series_name).
+
+    Raises ValueError for anything that is not a session file with positive,
+    finite measurements, so that a caller can report it in one place.
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        rows = [
+            Measurement(id=int(m["id"]), E=float(m["E"]), D=float(m["D"]))
+            for m in data["measurements"]
+        ]
+    except (KeyError, TypeError, ValueError) as err:
+        raise ValueError(f"not a session file ({err})") from err
+    for m in rows:
+        if not (math.isfinite(m.E) and math.isfinite(m.D) and m.E > 0 and m.D > 0):
+            raise ValueError(f"measurement {m.id} is out of range")
     return rows, str(data.get("series_name", ""))

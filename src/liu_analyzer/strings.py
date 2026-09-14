@@ -136,6 +136,9 @@ STRINGS: dict[str, dict[str, str]] = {
         "settings_show_fit": "Show fit line",
         "save_filter_png": "PNG image (plot + data) (*.png)",
         "save_filter_json": "JSON session (*.json)",
+        "footer_open": "Open",
+        "open_ok": "Opened {path}",
+        "open_error": "Could not open: {err}",
         "scheme_caption": "Gaussian beam through a focusing lens — typical Liu's-method optics",
         "attribution": SIGNATURE,
         "instructions_html": (
@@ -243,6 +246,9 @@ STRINGS: dict[str, dict[str, str]] = {
         "settings_show_fit": "显示拟合线",
         "save_filter_png": "PNG 图像（图表 + 数据）(*.png)",
         "save_filter_json": "JSON 会话 (*.json)",
+        "footer_open": "打开",
+        "open_ok": "已打开 {path}",
+        "open_error": "无法打开：{err}",
         "scheme_caption": "高斯光束经聚焦透镜 — Liu 方法的典型光路",
         "attribution": SIGNATURE,
         "instructions_html": (
@@ -345,6 +351,9 @@ STRINGS: dict[str, dict[str, str]] = {
         "settings_show_fit": "Mostrar la recta de ajuste",
         "save_filter_png": "Imagen PNG (gráfico + datos) (*.png)",
         "save_filter_json": "Sesión JSON (*.json)",
+        "footer_open": "Abrir",
+        "open_ok": "Abierto: {path}",
+        "open_error": "No se pudo abrir: {err}",
         "scheme_caption": (
             "Haz gaussiano a través de una lente de enfoque — "
             "montaje típico del método de Liu"
@@ -458,6 +467,9 @@ STRINGS: dict[str, dict[str, str]] = {
         "settings_show_fit": "Afficher la droite d'ajustement",
         "save_filter_png": "Image PNG (graphique + données) (*.png)",
         "save_filter_json": "Session JSON (*.json)",
+        "footer_open": "Ouvrir",
+        "open_ok": "Ouvert : {path}",
+        "open_error": "Impossible d'ouvrir : {err}",
         "scheme_caption": (
             "Faisceau gaussien à travers une lentille de focalisation — "
             "montage typique de la méthode de Liu"
@@ -575,6 +587,9 @@ STRINGS: dict[str, dict[str, str]] = {
         "settings_show_fit": "Показывать линию аппроксимации",
         "save_filter_png": "PNG-изображение (график + данные) (*.png)",
         "save_filter_json": "JSON-сессия (*.json)",
+        "footer_open": "Открыть",
+        "open_ok": "Открыт файл {path}",
+        "open_error": "Не удалось открыть: {err}",
         "scheme_caption": "Схема лазерного луча с распределением Гаусса",
         "attribution": SIGNATURE,
         "instructions_html": (

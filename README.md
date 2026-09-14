@@ -1,6 +1,6 @@
 # Liu Threshold Analyzer
 
-**Type in the craters your laser burned, read off how hard it has to hit before it burns anything at all — and how wide the beam actually was.**
+**Type in the craters your laser left, read off the ablation threshold and the true beam waist, each with its error bar. One window, nothing to install.**
 
 [![CI](https://github.com/ashbmstu/Liu/actions/workflows/ci.yml/badge.svg)](https://github.com/ashbmstu/Liu/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -138,9 +138,9 @@ people who work next to a laser in a darkened room.
        alt="The same window in dark theme: a dark grey interface with the same chart, fit results and measurement table">
 </p>
 
-**Save your work.** *Save* writes either a JSON session you can reopen, or a PNG
-of the chart with the data table drawn underneath it, which is the one to put in
-a report.
+**Save and reopen your work.** *Save* writes either a JSON session, which *Open*
+reads back later, or a PNG of the chart with the data table drawn underneath it,
+which is the one to put in a report.
 
 **A log**, at `%LOCALAPPDATA%\LiuAnalyzer\liu.log`, if it ever misbehaves.
 
@@ -192,14 +192,27 @@ and a release is made by pushing a version tag:
 2. Commit, then tag and push the tag:
 
    ```bat
-   git tag -a v1.0.1 -m "Liu Threshold Analyzer 1.0.1"
-   git push origin v1.0.1
+   git tag -a v1.1.0 -m "Liu Threshold Analyzer 1.1.0"
+   git push origin v1.1.0
    ```
 
 The [release workflow](.github/workflows/release.yml) refuses a tag that
 disagrees with any of those four files, runs the tests, builds
 `LiuAnalyzer.exe` on a clean Windows machine and publishes it, with the
 changelog entry as the release notes.
+
+## Project status
+
+Working and in use. Version 1.0.1 — see [CHANGELOG.md](CHANGELOG.md). It does
+one job and is not expected to grow much; bug reports and translation fixes
+are the most likely changes.
+
+## Contributing
+
+A dataset where the tool gets the physics wrong is the most useful thing
+anyone can send: the measurements, the answer you expected, and where it came
+from. Translation corrections from native speakers are the next most useful.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Citing this
 

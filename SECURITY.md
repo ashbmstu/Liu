@@ -1,7 +1,9 @@
 # Security
 
-This is a desktop calculator. It has no network code of any kind: it opens no
-sockets, checks for no updates, and sends nothing anywhere. It reads and writes
+This is a desktop calculator. It has no network code of its own: it opens no
+sockets, checks for no updates, and sends nothing anywhere. The only way it
+touches the outside world is a link in the About dialog, which opens in your
+browser when you click it. It reads and writes
 two things — a JSON session file you choose, and a rotating log at
 `%LOCALAPPDATA%\LiuAnalyzer\liu.log`.
 

@@ -45,6 +45,20 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: language
+    attributes:
+      label: Interface language
+      description: The one shown in the top bar when it happened.
+      options:
+        - English
+        - 中文
+        - Español
+        - Français
+        - Русский
+    validations:
+      required: true
+
   - type: input
     id: version
     attributes:
@@ -69,4 +83,6 @@ body:
       description: |
         The tail of `%LOCALAPPDATA%\LiuAnalyzer\liu.log`, if the program
         misbehaved rather than simply calculating something you disagree with.
+        The log records the values you typed in, so trim it if they are
+        confidential.
       render: shell

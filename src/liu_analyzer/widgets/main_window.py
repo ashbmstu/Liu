@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (
 
 from ..analysis import fit_and_derive
 from ..models import Measurement
-from ..persistence import default_save_path, save_session
+from ..persistence import default_save_path, documents_dir, load_session, save_session
 from ..strings import DEFAULT_LANG, STRINGS
 from ..strings import get as get_strings
 from .add_row import AddRow
@@ -37,7 +37,7 @@ log = logging.getLogger(__name__)
 WINDOW_WIDTH = 540   # ≈ 520-px layout + Qt chrome
 TOAST_MS = 2200
 
-DEFAULT_SETTINGS = {"x_scale": "linear", "theme": "light", "show_fit": True}
+DEFAULT_SETTINGS = {"x_scale": "log", "theme": "light", "show_fit": True}
 
 # Demo dataset shown on first launch, in muted grey, until the user adds
 # their first real measurement (or clicks New). The Measurement IDs here
@@ -200,6 +200,10 @@ class MainWindow(QMainWindow):
         instr.clicked.connect(lambda: show_instructions(self, self._t))
         h.addWidget(instr, 1)
 
+        open_btn = _BarButton(self._t["footer_open"])
+        open_btn.clicked.connect(self._on_open)
+        h.addWidget(open_btn, 1)
+
         save = _BarButton(self._t["footer_save"])
         save.clicked.connect(self._on_save)
         h.addWidget(save, 1)
@@ -295,6 +299,28 @@ class MainWindow(QMainWindow):
             return
         self._toast(self._t["save_ok"].format(path=path.name))
         log.info("saved %s to %s", "PNG" if is_png else "JSON", path)
+
+    def _on_open(self) -> None:
+        json_filter = self._t["save_filter_json"]
+        path_str, _ = QFileDialog.getOpenFileName(
+            self, self._t["footer_open"], str(documents_dir()), json_filter
+        )
+        if not path_str:
+            return
+        path = Path(path_str)
+        try:
+            rows, series_name = load_session(path)
+        except (OSError, ValueError) as err:
+            log.exception("open failed")
+            self._toast(self._t["open_error"].format(err=err))
+            return
+        self._rows = rows
+        self._next_id = max((r.id for r in rows), default=0) + 1
+        self._demo_active = False
+        self._series_input.setText(series_name)
+        self._refresh()
+        self._toast(self._t["open_ok"].format(path=path.name))
+        log.info("opened %d measurements from %s", len(rows), path)
 
     def _on_settings(self) -> None:
         dialog = SettingsDialog(self, self._t, self._settings)

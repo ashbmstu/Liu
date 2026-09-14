@@ -93,8 +93,9 @@ def fit_liu(groups: list[Group]) -> FitResult:
         sigma = math.sqrt(SSres / (n - 2))
         sa = sigma / math.sqrt(Sxx)
         sb = sigma * math.sqrt(1.0 / n + (mx * mx) / Sxx)
+        cov_ab = -mx * sigma * sigma / Sxx
     else:
-        sigma, sa, sb = 0.0, 0.0, 0.0
+        sigma, sa, sb, cov_ab = 0.0, 0.0, 0.0, 0.0
 
     r2 = 1.0 - SSres / Syy if Syy > 0 else 1.0
 
@@ -104,6 +105,7 @@ def fit_liu(groups: list[Group]) -> FitResult:
         intercept=b,
         sigma_slope=sa,
         sigma_intercept=sb,
+        cov_slope_intercept=cov_ab,
         sigma=sigma,
         r_squared=r2,
         n=n,
@@ -122,6 +124,7 @@ def derive_results(fit: FitResult) -> DerivedResults:
 
     a, b = fit.slope, fit.intercept
     sa, sb = fit.sigma_slope, fit.sigma_intercept
+    cov_ab = fit.cov_slope_intercept
 
     w0_um = math.sqrt(a / 2)
     d_um = 2 * w0_um
@@ -138,13 +141,19 @@ def derive_results(fit: FitResult) -> DerivedResults:
     E_th_J = E_th_mJ * 1e-3
     F_th = 2.0 * E_th_J / (math.pi * w0_cm * w0_cm)
 
-    # 1σ on F_th via log-derivative propagation
+    # 1σ on F_th via log-derivative propagation through the full 2x2
+    # covariance of the fit. Slope and intercept of an OLS line are
+    # correlated, so the cross term is not optional.
     # ln(F_th) = const + (-b/a) - ln(a/2)
     # ∂ln(F_th)/∂b = -1/a
     # ∂ln(F_th)/∂a = b/a² - 1/a
     dlnF_db = -1.0 / a
     dlnF_da = b / (a * a) - 1.0 / a
-    var_lnF = (dlnF_da * sa) ** 2 + (dlnF_db * sb) ** 2
+    var_lnF = (
+        (dlnF_da * sa) ** 2
+        + (dlnF_db * sb) ** 2
+        + 2.0 * dlnF_da * dlnF_db * cov_ab
+    )
     sigma_lnF = math.sqrt(max(var_lnF, 0.0))
     dF_th = F_th * sigma_lnF
 

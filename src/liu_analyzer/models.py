@@ -41,6 +41,7 @@ class FitResult:
     intercept: float = 0.0      # b, in µm²
     sigma_slope: float = 0.0    # σ_a (1σ)
     sigma_intercept: float = 0.0
+    cov_slope_intercept: float = 0.0   # Cov(a, b)
     sigma: float = 0.0          # residual standard deviation
     r_squared: float = 0.0
     n: int = 0

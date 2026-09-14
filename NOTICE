@@ -26,31 +26,57 @@ travels with the executable.
 
 ---
 
-Bundled libraries
+Bundled libraries and fonts
 
-The distributed .exe is built with PyInstaller and contains these third-party
-runtimes. Installing from requirements.txt fetches the same versions.
+The distributed .exe is built with PyInstaller and contains everything below.
+Installing from requirements.txt fetches the same versions of the direct
+dependencies; the rest come with them.
 
-    PySide6              LGPL v3 (Qt for Python)
-                         https://wiki.qt.io/Qt_for_Python
-    Qt 6                 LGPL v3
-                         https://www.qt.io/licensing/
-    matplotlib           matplotlib licence, a BSD-style licence derived from
-                         the Python Software Foundation licence
-                         https://matplotlib.org/stable/users/project/license.html
-    NumPy                BSD 3-Clause
-                         https://numpy.org/doc/stable/license.html
-    PyInstaller          GPL v2 or later, with an exception permitting the
-                         bootloader to be distributed with non-GPL applications
-                         https://pyinstaller.org/en/stable/license.html
+    Python 3.11 runtime      PSF licence
+                             https://docs.python.org/3/license.html
+    Microsoft Visual C++     Microsoft redistributable runtime DLLs
+    runtime                  (vcruntime140, msvcp140), under the Visual Studio
+                             redistribution terms
+    PySide6 and shiboken6    LGPL v3 (Qt for Python)
+                             https://wiki.qt.io/Qt_for_Python
+    Qt 6                     LGPL v3
+                             https://www.qt.io/licensing/
+    matplotlib               matplotlib licence, a BSD-style licence derived
+                             from the Python Software Foundation licence
+                             https://matplotlib.org/stable/users/project/license.html
+    NumPy                    BSD 3-Clause
+                             https://numpy.org/doc/stable/license.html
+    Pillow                   MIT-CMU (historical PIL licence)
+                             https://github.com/python-pillow/Pillow
+    contourpy                BSD 3-Clause
+    cycler                   BSD 3-Clause
+    kiwisolver               BSD 3-Clause
+    packaging                Apache 2.0 or BSD 2-Clause
+    pyparsing                MIT
+    python-dateutil          Apache 2.0 or BSD 3-Clause
+    six                      MIT
+    PyInstaller              GPL v2 or later, with an exception permitting the
+                             bootloader to be distributed with non-GPL
+                             applications
+                             https://pyinstaller.org/en/stable/license.html
+
+matplotlib carries its own fonts, and they travel inside the .exe with it:
+DejaVu (Bitstream Vera licence with the Arev additions), STIX (SIL Open Font
+Licence 1.1), the BaKoMa Computer Modern fonts (cm*10, BaKoMa licence) and the
+Adobe core-14 AFM metric files. The full texts are in matplotlib's LICENSE
+directory.
+
+    https://github.com/matplotlib/matplotlib/tree/main/LICENSE
 
 PySide6 and Qt are used as unmodified shared libraries under the LGPL. The LGPL
-requires that a recipient be able to replace them with a modified version; the
-complete source of this application, its dependency versions and its build
-script are published in this repository, which is how that is satisfied here.
+requires that a recipient be able to replace them with a modified version. The
+one-file .exe cannot be patched in place, so this is met the other way the
+licence allows: the complete source of this application, its exact dependency
+versions and its build script are published in this repository, and anyone can
+rebuild the executable against a Qt of their own.
 
 Chinese text in the chart is drawn with a font already installed on the
-computer, such as Microsoft YaHei on Windows. No font is bundled.
+computer, such as Microsoft YaHei on Windows. No CJK font is bundled.
 
 ---
 

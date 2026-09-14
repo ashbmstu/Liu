@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-09-14
+
+### Added
+
+- **Open.** A saved JSON session can now be read back into the window from the
+  footer, which is what the Save option had been promising. A file that is not
+  a session, or holds a non-positive measurement, is refused with a message
+  rather than half-loaded.
+
+### Changed
+
+- **The energy axis starts logarithmic.** That is the view in which Liu's
+  method is a straight line and the one every screenshot shows; a new user no
+  longer has to find Settings to see it.
+
+### Fixed
+
+- **The threshold uncertainty now uses the whole covariance of the fit.** The
+  slope and intercept of a least-squares line are correlated, and the earlier
+  propagation treated them as independent, although the documentation said
+  otherwise. A test checks the result against an independent computation of
+  the covariance matrix.
+
 ## [1.0.0] - 2026-09-13
 
 First public release. The tool has been in use since May 2026; this is the point
@@ -47,4 +70,5 @@ at which somebody else could pick it up.
   default argument, so `B008` is ignored for `data_table.py` with a note saying
   why rather than being worked around.
 
+[1.0.1]: https://github.com/ashbmstu/Liu/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ashbmstu/Liu/releases/tag/v1.0.0
